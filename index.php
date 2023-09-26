@@ -6,10 +6,17 @@ require 'flight/Flight.php'; //se carga el framework
 Flight::register('db', 'PDO', array('mysql:host=localhost;dbname=api', 'root', ''));
 // Se aclara que se utilizara una base de datos, un topo de conexion, despues donde esta ubicada, usuario y contraseña, en caso de no tener se deja en blanco
 // Tipo de conexion PDO 
+// con el array lo que se busca es conectarse a una base de datos 
+
+Flight::route('GET /alumnos', function () { //solicitud 
+    
+    $sentence = FLight::db()->prepare('SELECT * FROM `alumnos`'); //selectionar todos los datos de alumnos
+    $sentence->execute();
+    $dates = $sentence->fetchAll();
 
 
-Flight::route('/route', function () { //solicitud 
-    echo '¡Hello my friend!';
+    FLight::json($dates);
+
 });
 
 Flight::start();
