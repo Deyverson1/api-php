@@ -69,11 +69,21 @@ Flight::route('PUT /alumnos', function () {
     Flight::jsonp(["Alumno modificado"]);
 });
 
+// Lectur de un registro determinado 
+Flight::route('GET /alumnos/@id', function ($id) {
+    $sentence = Flight::db()->prepare('SELECT * FROM `alumnos` WHERE id=?'); //selectionar todos los datos de alumnos
+    $sentence -> bindParam(1, $id); //pasando nuevos parametros 
+
+    $sentence->execute();
+    $dates = $sentence->fetchAll();
+    Flight::json($dates);
+
+});
 
 Flight::start();
 
 // Create a new task            POST            PATH   /tasks
 // Delete an exiting task       DELETE          PATH   /tasks/{id}
-// Get a specific task          GET             PATH   /tasks/{id}
-// Search for tasks             GET             PATH   /tasks
+// Get a specific task          GET             PATH   /tasks/{id}  //todos los registros
+// Search for tasks             GET             PATH   /tasks   //solo un registro en especial
 // Update an existing task      PUT             PATH   /tasks/{id}
