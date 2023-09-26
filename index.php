@@ -8,16 +8,35 @@ Flight::register('db', 'PDO', array('mysql:host=localhost;dbname=api', 'root', '
 // Tipo de conexion PDO 
 // con el array lo que se busca es conectarse a una base de datos 
 
-Flight::route('GET /alumnos', function () { //solicitud 
-    
-    $sentence = FLight::db()->prepare('SELECT * FROM `alumnos`'); //selectionar todos los datos de alumnos
+//Lee los datos y muestra en un interface
+Flight::route('GET /alumnos', function () { //solicitud de datos
+    $sentence = Flight::db()->prepare('SELECT * FROM `alumnos`'); //selectionar todos los datos de alumnos
     $sentence->execute();
     $dates = $sentence->fetchAll();
-
-
-    FLight::json($dates);
-
+    Flight::json($dates);
 });
+
+//recibe nuevos datos y recepciona 
+Flight::route('POST /alumnos', function () {
+
+    $nombres=(Flight::request()->data->nombres);  
+    $apellidos=(Flight::request()->data->apellidos);  
+
+    $sql = "INSERT INTO alumnos (nombres, apellidos) VALUES(?,?)";
+    $sentence = Flight::db()->prepare($sql);
+    //los siguientes son parametros que se insertan en el orden que estan en la parte de VALUES en la sentencia
+    $sentence -> bindParam(1, $nombres);
+    $sentence -> bindParam(2, $apellidos);
+    $sentence->execute();
+
+    Flight::jsonp(["Alumno agregado"]);
+});
+// El anterior bloque 
+// 1. nos hacen un envio a travez de post 
+// 2. recepcionamos los datos en las variables $nombres y $apellidos
+// 3. insertamos la informacion en la DB
+// 4. se muestra un mensaje de alumno agregado
+
 
 Flight::start();
 
