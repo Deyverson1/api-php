@@ -49,6 +49,27 @@ Flight::route('DELETE /alumnos', function () {
     Flight::jsonp(["Alumno eliminado"]);
 });
 
+// Actualizar registros  
+Flight::route('PUT /alumnos', function () {
+    $id=(Flight::request()->data->id); 
+    $nombres=(Flight::request()->data->nombres);  
+    $apellidos=(Flight::request()->data->apellidos);
+
+    // Identificar la instruccion sql 
+    $sql = "UPDATE alumnos SET nombres=?, apellidos=? WHERE id=?";
+    // Se cambiaran los nombres y los apelledos por los nuevos cuando el id sea igual al id 
+    $sentence = Flight::db()->prepare($sql); //preparar la instruccion
+
+    // El numero representa el numero respecto al ? que ocupa
+    $sentence -> bindParam(1, $nombres);//pasando nuevos parametros 
+    $sentence -> bindParam(2, $apellidos);//pasando nuevos parametros 
+    $sentence -> bindParam(3, $id); //pasando nuevos parametros 
+
+    $sentence->execute();
+    Flight::jsonp(["Alumno modificado"]);
+});
+
+
 Flight::start();
 
 // Create a new task            POST            PATH   /tasks
