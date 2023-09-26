@@ -30,13 +30,24 @@ Flight::route('POST /alumnos', function () {
     $sentence->execute();
 
     Flight::jsonp(["Alumno agregado"]);
+    // El anterior bloque 
+    // 1. nos hacen un envio a travez de post 
+    // 2. recepcionamos los datos en las variables $nombres y $apellidos
+    // 3. insertamos la informacion en la DB
+    // 4. se muestra un mensaje de alumno agregado
 });
-// El anterior bloque 
-// 1. nos hacen un envio a travez de post 
-// 2. recepcionamos los datos en las variables $nombres y $apellidos
-// 3. insertamos la informacion en la DB
-// 4. se muestra un mensaje de alumno agregado
 
+//Borrar registro
+Flight::route('DELETE /alumnos', function () {
+    $id=(Flight::request()->data->id); 
+
+    $sql = "DELETE FROM alumnos WHERE id=?";
+    $sentence = Flight::db()->prepare($sql);
+    $sentence -> bindParam(1, $id);
+    $sentence->execute();
+
+    Flight::jsonp(["Alumno eliminado"]);
+});
 
 Flight::start();
 
